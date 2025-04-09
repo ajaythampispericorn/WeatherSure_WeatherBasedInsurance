@@ -76,3 +76,42 @@ A mock Chainlink oracle for testing and development environments
 
 1. Clone the repository  
 ```  
+git clone https://github.com/ajaythampispericorn/WeatherSure_WeatherBasedInsurance  
+cd WeatherSure_WeatherBasedInsurance  
+```  
+
+2. Install dependencies  
+```  
+npm install  
+```  
+3. Create a .env file with the following parameters  
+```  
+INFURA_URL=your_infura_api_key  
+PRIVATE_KEY=your_private_key  
+```  
+
+### Deployment  
+
+1. To deploy locally  
+
+```  
+npx hardhat node  
+npx hardhat ignition deploy ignition/modules/Weather_Insurance.js  
+```  
+
+2. To deploy to SEPOLIA testnet  
+
+```  
+npx hardhat ignition deploy ignition/modules/Weather_Insurance.js --network sepolia  
+```
+
+### Testing and Coverage  
+
+```  
+npx hardhat test  
+npx hardhat coverage
+```  
+
+### LICENSE  
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
