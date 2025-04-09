@@ -1,0 +1,1832 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/insurance.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> insurance.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">98.57% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>138/140</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.71% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>120/140</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>22/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>193/193</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-yes">38×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66×</span>
+<span class="cline-any cline-yes">66×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66×</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-yes">64×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">86×</span>
+<span class="cline-any cline-yes">84×</span>
+<span class="cline-any cline-yes">84×</span>
+<span class="cline-any cline-yes">83×</span>
+<span class="cline-any cline-yes">82×</span>
+<span class="cline-any cline-yes">81×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">58×</span>
+<span class="cline-any cline-yes">57×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">57×</span>
+<span class="cline-any cline-yes">56×</span>
+<span class="cline-any cline-yes">55×</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-yes">53×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">52×</span>
+<span class="cline-any cline-yes">52×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">52×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">52×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity 0.8.28;
+&nbsp;
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+&nbsp;
+import "@chainlink/contracts/src/v0.8/Chainlink.sol";
+import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
+&nbsp;
+contract WeatherInsurance is ReentrancyGuard, AccessControl, ChainlinkClient {
+    using Math for uint256;
+    using Chainlink for Chainlink.Request;
+&nbsp;
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant INSURANCE_PROVIDER_ROLE = keccak256("INSURANCE_PROVIDER_ROLE");
+    bytes32 public constant RISK_ACCESSOR_ROLE = keccak256("RISK_ACCESSOR_ROLE");
+    bytes32 public constant CLAIMS_MANAGER_ROLE = keccak256("CLAIMS_MANAGER_ROLE");
+&nbsp;
+    address private oracle;
+    bytes32 private jobId;
+    uint256 private fee;
+    address private linkToken;
+&nbsp;
+    uint256 public providerMinimumStake;
+    mapping (address =&gt; uint256) public providerStakes;
+    mapping (address =&gt; bool) public activeProviders;
+&nbsp;
+    error MinimumEthRequired();
+    error NotAProvider();
+&nbsp;
+    struct Weather {
+        string locationId;
+        uint256 threshold;
+        WeatherType weatherType;
+        bool aboveThreshold;
+    }
+&nbsp;
+    enum WeatherType { RAINFALL, TEMPERATURE, WIND}
+    enum PolicyStatus { ACTIVE, EXPIRED, CLAIMED, CANCELLED }
+    enum ClaimStatus { NONE, PENDING, APPROVED, REJECTED }
+&nbsp;
+    struct Insurance {
+        address provider;
+        string name;
+        string description;
+        uint256 minPremium;
+        uint256 maxCoverage;
+        uint256 minDuration;
+        uint256 maxDuration;
+        Weather details;
+        bool isActive;
+        uint256 riskfactor; 
+    }
+&nbsp;
+    struct Policy {
+        uint256 productId;
+        address policyholder;
+        address provider;
+        uint256 premium;
+        uint256 coverage;
+        uint256 startDate;
+        uint256 endDate;
+        PolicyStatus status;
+        bytes32 requestId;
+        ClaimStatus claimStatus;
+        uint256 lastClaimDate;
+    }
+&nbsp;
+    struct Claim {
+        uint256 policyId;
+        uint256 timestamp;
+        uint256 amount;
+        ClaimStatus status;
+        address reviewer;
+        string reason;
+        uint256 weatherValue;
+    }
+&nbsp;
+    uint256 public productCount;
+    uint256 public policyCount;
+    uint256 public claimCount;
+&nbsp;
+    mapping (uint256 =&gt; Insurance) public products;
+    mapping (uint256 =&gt; Policy) public policies;
+    mapping (uint256 =&gt; Claim) public claims;
+    mapping (bytes32 =&gt; uint256) private requestToPolicyId;
+    mapping(address =&gt; uint256[]) public providerProducts;
+    mapping(address =&gt; uint256[]) public userPolicies;
+&nbsp;
+    uint256 public platformFeePercentage; // in basis points
+    address public feeCollector;
+&nbsp;
+    event ProductCreated(uint256 indexed productId, address indexed provider, string name);
+    event ProductUpdated(uint256 indexed productId, address indexed provider);
+    event PolicyCreated(uint256 indexed policyId, uint256 indexed productId, address indexed policyholder);
+    event PolicyClaimed(uint256 indexed policyId, uint256 claimId, address indexed policyholder, uint256 amount);
+    event ClaimSubmitted(uint256 indexed claimId, uint256 indexed policyId, address indexed policyholder);
+    event ClaimProcessed(uint256 indexed claimId, ClaimStatus status, address indexed reviewer);
+    event WeatherDataRequested(bytes32 indexed requestId, uint256 indexed policyId);
+    event WeatherDataReceived(bytes32 indexed requestid, uint256 indexed policyId, uint256 weatherValue);
+    event ProviderStaked(address indexed provider, uint256 amount);
+    event ProviderUnstaked(address indexed provider, uint256 amount);
+&nbsp;
+    constructor(
+        address _linkToken,
+        address _oracle,
+        bytes32 _jobId,
+        uint256 _fee
+    ) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(ADMIN_ROLE, msg.sender);
+&nbsp;
+        _setChainlinkToken(_linkToken);
+        oracle = _oracle;
+        jobId = _jobId;
+        fee= _fee;
+        linkToken = _linkToken;
+&nbsp;
+        platformFeePercentage = 250;  //2.5%
+        feeCollector = msg.sender;
+        providerMinimumStake = 10 ether;
+    }
+&nbsp;
+    function stakeAsProvider() external payable {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.value &gt; 0, "Must stake minimum 1 ETH");
+        providerStakes[msg.sender] = providerStakes[msg.sender] + msg.value;
+&nbsp;
+        if(providerStakes[msg.sender] &gt;= providerMinimumStake ) {
+            _grantRole(INSURANCE_PROVIDER_ROLE, msg.sender);
+            activeProviders[msg.sender] = true;
+        }
+&nbsp;
+        emit ProviderStaked(msg.sender, msg.value);
+    }
+&nbsp;
+    function unstakeAsProvider(uint256 _amount) external <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        require(hasRole(INSURANCE_PROVIDER_ROLE, msg.sender), "Not A Provider");
+        require(_amount &gt; 0 &amp;&amp; _amount &lt;= providerStakes[msg.sender], "Invalid Amount");
+&nbsp;
+        bool hasActivePolicy = false;
+&nbsp;
+        for (uint256 i = 0; i &lt; providerProducts[msg.sender].length; i++) {
+            uint256 prodId = providerProducts[msg.sender][i];
+            <span class="missing-if-branch" title="else path not taken" >E</span>if(products[prodId].isActive) {
+                hasActivePolicy = true;
+                break;
+            }
+        }
+&nbsp;
+        require(!hasActivePolicy, "Cannot Unstake with active policies!!!");
+&nbsp;
+        providerStakes[msg.sender] = providerStakes[msg.sender] - (_amount);
+&nbsp;
+        if (providerStakes[msg.sender] &lt; providerMinimumStake) {
+            _revokeRole(INSURANCE_PROVIDER_ROLE, msg.sender);
+            activeProviders[msg.sender] = false;
+        }
+&nbsp;
+        payable(msg.sender).transfer(_amount);
+&nbsp;
+        emit ProviderUnstaked(msg.sender, _amount);
+    }
+&nbsp;
+    function createInsuranceProduct (
+        string memory _name,
+        string memory _description,
+        uint256 _minPremium,
+        uint256 _maxCoverage,
+        uint256 _minDuration,
+        uint256 _maxDuration,
+        string memory _locationId,
+        uint256 _threshold,
+        WeatherType _weatherType,
+        bool _aboveThreshold
+    ) external {
+        require(hasRole(INSURANCE_PROVIDER_ROLE, msg.sender), "Not A Provider");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(activeProviders[msg.sender], "Provider Not Active");
+        require(_minPremium &gt; 0, "Premium must be above zero");
+        require(_maxCoverage &gt; _minPremium, "Max coverage must exceed Premium");
+        require(_minDuration &gt; 0, "Duration cannot be zero");
+        require(_maxDuration &gt;= _minDuration, "Total duration cannot be less than minimum duration");
+&nbsp;
+        uint256 productId = productCount++;
+&nbsp;
+        products[productId] = Insurance({
+            provider : msg.sender,
+            name : _name,
+            description : _description,
+            minPremium : _minPremium,
+            maxCoverage : _maxCoverage,
+            minDuration : _minDuration,
+            maxDuration : _maxDuration,
+            details : Weather({
+                locationId : _locationId,
+                threshold : _threshold,
+                weatherType : _weatherType,
+                aboveThreshold : _aboveThreshold
+            }),
+            isActive : true,
+            riskfactor : 50     // 50% set as default
+        });
+        providerProducts[msg.sender].push(productId);
+&nbsp;
+        emit ProductCreated(productId, msg.sender, _name);
+    }
+&nbsp;
+    function updateInsuranceProduct (
+        uint256 _productId,
+        bool _isActive,
+        uint256 _minPremium,
+        uint256 _maxCoverage
+    ) external {
+        require(_productId &lt; productCount, "Product Does Not Exist");
+        Insurance storage product = products[_productId];
+&nbsp;
+        require(product.provider == msg.sender || hasRole (ADMIN_ROLE, msg.sender), "Unauthorized");
+        require(_minPremium &gt; 0, "There should be a minimum premium");
+        require(_maxCoverage &gt; _minPremium, "Maximum coverage to be greater than minimum premium");
+&nbsp;
+        product.isActive = _isActive;
+        product.minPremium = _minPremium;
+        product.maxCoverage = _maxCoverage;
+&nbsp;
+        emit ProductUpdated(_productId, msg.sender);
+    }
+&nbsp;
+    function updateRisk(uint256 _productId, uint256 _riskFactor) external {
+        require(hasRole(RISK_ACCESSOR_ROLE, msg.sender), "Not Authorized. Only Risk Assessor Allowed!!!");
+        require(_productId &lt; productCount, "Product Does not exist");
+        require(_riskFactor &gt; 0 &amp;&amp; _riskFactor &lt;= 100, "Invalid Risk Factor");
+&nbsp;
+        products[_productId].riskfactor = _riskFactor;
+&nbsp;
+        emit ProductUpdated(_productId, products[_productId].provider);
+    }
+&nbsp;
+    function purchasePolicy(
+        uint256 _productId,
+        uint256 _duration
+    ) external payable <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        require(_productId &lt; productCount, "Product doesnot exist");
+        Insurance storage product = products[_productId];
+&nbsp;
+        require(product.isActive, "Product Not Active");
+        require(msg.value &gt;= product.minPremium, "Premium Too Low");
+        require(msg.value &lt;= product.maxCoverage, "Premium exceeds maximum coverage");
+        require(_duration &gt;= product.minDuration, "Duration too short");
+        require(_duration &lt;= product.maxDuration, "Duration too long");
+&nbsp;
+        uint256 coverageMultiplier = (100 - product.riskfactor) / 10;
+        uint256 coverage = msg.value * coverageMultiplier;
+&nbsp;
+        if(coverage &gt; product.maxCoverage) {
+            coverage = product.maxCoverage;
+        }
+&nbsp;
+        require(providerStakes[product.provider] &gt;= coverage, "Provider Stake low to payout coverage");
+&nbsp;
+        uint256 platformFee = (msg.value * platformFeePercentage) / 10000;
+        uint256 providerAmount = msg.value - platformFee;
+&nbsp;
+        payable(feeCollector).transfer(platformFee);
+&nbsp;
+        uint256 policyId = policyCount++;
+        policies[policyId] = Policy({
+            productId : _productId,
+            policyholder : msg.sender,
+            provider : product.provider,
+            premium : msg.value,
+            coverage : coverage,
+            startDate : block.timestamp,
+            endDate : block.timestamp + _duration,
+            status : PolicyStatus.ACTIVE,
+            requestId : bytes32(0),
+            claimStatus: ClaimStatus.NONE,
+            lastClaimDate : 0
+        });
+&nbsp;
+        userPolicies[msg.sender].push(policyId);
+&nbsp;
+        providerStakes[product.provider] += (providerAmount);
+&nbsp;
+        emit PolicyCreated(policyId, _productId, msg.sender);
+    }
+&nbsp;
+&nbsp;
+    function cancelPolicy(uint256 _policyId) external {
+        require(_policyId &lt; policyCount, "Policy does not exist");
+        Policy storage policy = policies[_policyId];
+&nbsp;
+        require(policy.policyholder == msg.sender, "Not PolicyHolder");
+        require(policy.status == PolicyStatus.ACTIVE, "Policy not active");
+&nbsp;
+        uint256 totalDuration = policy.endDate - policy.startDate;
+        uint256 remainingTime = 0;
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(block.timestamp &lt; policy.endDate){
+            remainingTime = policy.endDate - block.timestamp;
+        }
+&nbsp;
+        uint256 refundPercentage = remainingTime * 100 / totalDuration;
+        uint256 refundAmount = (policy.premium * refundPercentage / 100) * 75/100;        //75% of premium
+&nbsp;
+        policy.status = PolicyStatus.CANCELLED;
+        payable(policy.policyholder).transfer(refundAmount);
+    }
+&nbsp;
+    function renewPolicy(uint256 _policyId) external payable {
+        require(_policyId &lt; policyCount, "Policy does Not Exist");
+        Policy storage policy = policies[_policyId];
+&nbsp;
+        require(policy.policyholder == msg.sender, "Not the policy holder");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(policy.status == PolicyStatus.ACTIVE || <span class="branch-1 cbranch-no" title="branch not covered" >policy.status == PolicyStatus.EXPIRED</span>, "Policy Cannot be renewd");
+        require(block.timestamp &gt;= policy.endDate, "Policy not yet expired");
+        require(msg.value &gt;= policy.premium, "Insufficient Amount");
+&nbsp;
+        Insurance storage product = products[policy.productId];
+        require(product.isActive, "Product is not active");
+&nbsp;
+        uint256 duration = policy.endDate - policy.startDate;
+        uint256 platformFee = msg.value * platformFeePercentage / 10000;
+        uint256 providerAmount = msg.value - platformFee;
+&nbsp;
+        payable(feeCollector).transfer(platformFee);
+&nbsp;
+        policy.premium = msg.value;
+        policy.startDate = block.timestamp;
+        policy.endDate = block.timestamp + duration;
+        policy.status = PolicyStatus.ACTIVE;
+        policy.claimStatus = ClaimStatus.NONE;
+        policy.lastClaimDate = 0;
+&nbsp;
+        providerStakes[policy.provider] += providerAmount;
+    }
+&nbsp;
+    function submitClaim(uint256 _policyId) external {
+        require(_policyId &lt; policyCount, "Policy Does Not Exist");
+        Policy storage policy = policies[_policyId];
+&nbsp;
+        require(policy.policyholder == msg.sender, "Not the policy holder");
+        
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(policy.startDate &lt;= block.timestamp, "Policy not started");
+        require(policy.endDate &gt; block.timestamp, "Policy Expired");
+        require(policy.status == PolicyStatus.ACTIVE, "Policy not active");
+&nbsp;
+        uint256 claimId = claimCount++;
+        claims[claimId] = Claim({
+            policyId : _policyId,
+            timestamp : block.timestamp,
+            amount : 0,
+            status : ClaimStatus.PENDING,
+            reviewer : address(0),
+            reason : "",
+            weatherValue : 0 
+        });
+&nbsp;
+        policy.claimStatus = ClaimStatus.PENDING;
+&nbsp;
+        requestWeatherData(_policyId, claimId);
+&nbsp;
+        emit ClaimSubmitted(claimId, _policyId, msg.sender);
+    }
+&nbsp;
+    function requestWeatherData(uint256 _policyId, uint256 _claimId) internal {
+        Policy storage policy = policies[_policyId];
+        Insurance storage product = products[policy.productId];
+&nbsp;
+        Chainlink.Request memory req = _buildChainlinkRequest(
+            jobId,
+            address(this),
+            this.fetchWeatherData.selector
+        );
+&nbsp;
+        string memory condition;
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(product.details.weatherType == WeatherType.RAINFALL) { condition = "rainfall"; }
+        else <span class="cstat-no" title="statement not covered" >if(product.details.weatherType == WeatherType.TEMPERATURE) { condition = "temperature"; }</span>
+        else <span class="cstat-no" title="statement not covered" >if(product.details.weatherType == WeatherType.WIND) { condition = "wind"; }</span>
+&nbsp;
+        req._add("locationId", product.details.locationId); 
+        req._add("condition", condition); 
+        req._add("timestamp", uint2str(block.timestamp)); 
+&nbsp;
+        bytes32 requestId = _sendChainlinkRequestTo(oracle, req, fee);
+&nbsp;
+        policy.requestId = requestId;
+        requestToPolicyId[requestId] = _policyId;
+&nbsp;
+        emit WeatherDataRequested(requestId, _policyId);
+    }
+&nbsp;
+    function fetchWeatherData(bytes32 _requestId, uint256 _weatherValue) external <span class="missing-if-branch" title="else path not taken" >E</span>recordChainlinkFulfillment(_requestId) {
+        uint256 policyId = requestToPolicyId[_requestId];
+        Policy storage policy = policies[policyId];
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(policy.status == PolicyStatus.ACTIVE, "Policy Not Active");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(policy.claimStatus == ClaimStatus.PENDING, "No pending claims");
+&nbsp;
+        Insurance storage product = products[policy.productId];
+&nbsp;
+        emit WeatherDataReceived(_requestId, policyId, _weatherValue);
+&nbsp;
+        uint256 claimId;
+        bool found = false;
+        for(uint256 i = 0; i &lt; claimCount; i++){
+            if(claims[i].policyId == policyId &amp;&amp; claims[i].status == ClaimStatus.PENDING){
+                claimId = i;
+                found = true;
+                break;
+            }
+        }
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(found, "Pending claim not found");
+&nbsp;
+        claims[claimId].weatherValue = _weatherValue;
+&nbsp;
+        bool thresholdConditionMet = product.details.aboveThreshold ? 
+            _weatherValue &gt;= product.details.threshold :
+            _weatherValue &lt;= product.details.threshold;
+&nbsp;
+        if(thresholdConditionMet) {
+            uint256 payoutAmount = policy.coverage;
+&nbsp;
+            <span class="missing-if-branch" title="else path not taken" >E</span>require(providerStakes[policy.provider] &gt;= payoutAmount, "Insufficient provider stake");
+        
+            claims[claimId].amount = payoutAmount;
+            claims[claimId].status = ClaimStatus.APPROVED;
+            claims[claimId].reviewer = address(this);
+            claims[claimId].reason = "Weather Threshold Condition Met";
+&nbsp;
+            policy.claimStatus = ClaimStatus.APPROVED;
+            policy.lastClaimDate = block.timestamp;
+&nbsp;
+            providerStakes[policy.provider] -= payoutAmount;
+&nbsp;
+            payable(policy.policyholder).transfer(payoutAmount);
+&nbsp;
+            emit ClaimProcessed(claimId, ClaimStatus.APPROVED, address(this));
+            emit PolicyClaimed(policyId, claimId, policy.policyholder, payoutAmount);
+        } else {
+            claims[claimId].status = ClaimStatus.REJECTED;
+            claims[claimId].reviewer = address(this);
+            claims[claimId].reason = "Weather Threshold Conditions Not Met";
+&nbsp;
+            policy.claimStatus = ClaimStatus.REJECTED;
+&nbsp;
+            emit ClaimProcessed(claimId, ClaimStatus.REJECTED, address(this));
+        }
+    }
+&nbsp;
+    function updateOracleParameters(address _oracle, bytes32 _jobId, uint256 _fee) external {
+        require(hasRole(ADMIN_ROLE, msg.sender), "Not Admin");
+&nbsp;
+        oracle = _oracle;
+        jobId = _jobId;
+        fee = _fee;
+    }
+&nbsp;
+    function updatePlatformFee(uint256 _feePercentage, address _feeCollector) external {
+        require(hasRole(ADMIN_ROLE, msg.sender), "Not Admin");
+        require(_feePercentage &lt;=1000, "Fee too high");     // max 10% fee only
+        require(_feeCollector != address(0), "invalid Address");
+&nbsp;
+        platformFeePercentage = _feePercentage;
+        feeCollector = _feeCollector;
+    }
+&nbsp;
+    function updateProviderMinimumStake(uint256 _minimumStake) external {
+        require(hasRole(ADMIN_ROLE, msg.sender), "Not Admin");
+        require(_minimumStake &gt; 0, "Minimum must be above 0 ETH");
+&nbsp;
+        providerMinimumStake = _minimumStake;
+    }
+&nbsp;
+    function withdrawLink(uint256 _amount) external {
+        require(hasRole(ADMIN_ROLE, msg.sender), "Not admin");
+&nbsp;
+        IERC20 link = IERC20(linkToken);
+        uint256 balance = link.balanceOf(address(this));
+        require(_amount &lt;= balance, "Insufficient LINK token balance");
+&nbsp;
+        bool success = link.transfer(msg.sender, _amount);
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(success, "Transfer Failed");
+    }
+&nbsp;
+    function getProviderProducts(address _provider) external view returns (uint256[] memory) {
+        return providerProducts[_provider];
+    }
+&nbsp;
+    function getUserPolicy(address _user) external view returns (uint256[] memory) {
+        return userPolicies[_user];
+    }
+&nbsp;
+    function getProductDetails(uint256 _productId) external view returns (
+        address provider,
+        string memory name,
+        string memory description,
+        uint256 minPremium,
+        uint256 maxCoverage,
+        uint256 minDuration,
+        uint256 maxDuration,
+        string memory locationId,
+        uint256 threshold,
+        WeatherType weatherType,
+        bool aboveThreshold,
+        bool isActive,
+        uint256 riskfactor
+    ) {
+        require(_productId &lt; productCount, "Product Does not Exist");
+        Insurance storage product = products[_productId];
+&nbsp;
+        return (
+            product.provider,
+            product.name,
+            product.description,
+            product.minPremium,
+            product.maxCoverage,
+            product.minDuration,
+            product.maxDuration,
+            product.details.locationId,
+            product.details.threshold,
+            product.details.weatherType,
+            product.details.aboveThreshold,
+            product.isActive,
+            product.riskfactor
+        ); 
+    }
+&nbsp;
+    function getPolicyDetails(uint256 _policyId) external view returns (
+        uint256 productId,
+        address policyholder,
+        address provider,
+        uint256 premium,
+        uint256 coverage,
+        uint256 startDate,
+        uint256 endDate,
+        PolicyStatus status,
+        ClaimStatus claimStatus,
+        uint256 lastClaimDate
+    ) {
+        require(_policyId &lt; policyCount, "Policy does not exist");
+        Policy storage policy = policies[_policyId];
+&nbsp;
+        return (
+            policy.productId,
+            policy.policyholder,
+            policy.provider,
+            policy.premium,
+            policy.coverage,
+            policy.startDate,
+            policy.endDate,
+            policy.status,
+            policy.claimStatus,
+            policy.lastClaimDate
+        );
+    }
+&nbsp;
+    function getClaimDetails(uint256 _claimId) external view returns (
+        uint256 policyId,
+        uint256 timestamp,
+        uint256 amount,
+        ClaimStatus status,
+        address reviewer,
+        string memory reason,
+        uint256 weatherValue
+    ) {
+        require(_claimId &lt; claimCount, "Claim does not exist");
+        Claim storage claim = claims[_claimId];
+        
+        return (
+            claim.policyId,
+            claim.timestamp,
+            claim.amount,
+            claim.status,
+            claim.reviewer,
+            claim.reason,
+            claim.weatherValue
+        );
+    }
+&nbsp;
+    function uint2str(uint256 _i) public pure returns (string memory) {
+        return Strings.toString(_i);
+    }
+    
+    receive() external payable {}       //fallback fn
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Apr 09 2025 17:48:46 GMT+0530 (India Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

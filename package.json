@@ -1,0 +1,21 @@
+{
+  "name": "weather_insurance",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@chainlink/contracts": "^1.3.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.2.0",
+    "chai": "^4.3.10",
+    "ethers": "^6.13.5",
+    "hardhat": "^2.22.19",
+    "mocha": "^11.1.0"
+  }
+}

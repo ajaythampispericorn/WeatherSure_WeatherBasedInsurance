@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Chainlink",
+  "sourceName": "@chainlink/contracts/src/v0.8/Chainlink.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122085bf27e2ee3641db9893c32c4dfc12f5b69d9542f04fe8dc7fc711730089c45f64736f6c634300081c0033",
+  "deployedBytecode": "0x600080fdfea264697066735822122085bf27e2ee3641db9893c32c4dfc12f5b69d9542f04fe8dc7fc711730089c45f64736f6c634300081c0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
