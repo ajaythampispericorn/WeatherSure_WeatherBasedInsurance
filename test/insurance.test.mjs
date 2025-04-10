@@ -63,7 +63,7 @@ describe("WeatherInsurance", function () {
     const hasDefaultAdminRole = await weatherInsurance.hasRole(DEFAULT_ADMIN_ROLE, owner.address);
     expect(hasDefaultAdminRole).to.be.true;
     
-    expect(await weatherInsurance.platformFeePercentage()).to.equal(250n); // 2.5%
+    expect(await weatherInsurance.platformFeePercentage()).to.equal(2500n); // 2.5%
     expect(await weatherInsurance.feeCollector()).to.equal(owner.address);
     expect(await weatherInsurance.providerMinimumStake()).to.equal(MIN_PROVIDER_STAKE);
   });
@@ -120,7 +120,7 @@ describe("WeatherInsurance", function () {
     });
     
     it("Should have correct initial values", async function() {
-      expect(await weatherInsurance.platformFeePercentage()).to.equal(250n); // 2.5%
+      expect(await weatherInsurance.platformFeePercentage()).to.equal(2500n); // 2.5%
       expect(await weatherInsurance.feeCollector()).to.equal(owner.address);
       expect(await weatherInsurance.providerMinimumStake()).to.equal(MIN_PROVIDER_STAKE);
     });
@@ -313,7 +313,7 @@ describe("WeatherInsurance", function () {
         expect(product.minDuration).to.equal(86400);
         expect(product.maxDuration).to.equal(2592000);
         expect(product.isActive).to.equal(true);
-        expect(product.riskfactor).to.equal(50);
+        expect(product.riskfactor).to.equal(5000);
       });
       
       it("Should update the provider's product list", async function () {
@@ -563,25 +563,25 @@ describe("WeatherInsurance", function () {
       await weatherInsurance.connect(owner).grantRole(RISK_ACCESSOR_ROLE, riskAssessor.address);
       });
       it("Should update risk factor by risk assessor", async function () {
-        await weatherInsurance.connect(riskAssessor).updateRisk(productId, 75);
+        await weatherInsurance.connect(riskAssessor).updateRisk(productId, 7500);
         
         const product = await weatherInsurance.products(productId);
-        expect(product.riskfactor).to.equal(75);
+        expect(product.riskfactor).to.equal(7500);
       });
       
       it("Should emit ProductUpdated event", async function () {
-        await expect(weatherInsurance.connect(riskAssessor).updateRisk(productId, 75))
+        await expect(weatherInsurance.connect(riskAssessor).updateRisk(productId, 7500))
           .to.emit(weatherInsurance, "ProductUpdated")
           .withArgs(productId, provider1.address);
       });
       
       it("Should fail if not risk assessor", async function () {
-        await expect(weatherInsurance.connect(provider1).updateRisk(productId, 75))
+        await expect(weatherInsurance.connect(provider1).updateRisk(productId, 7500))
           .to.be.revertedWith("Not Authorized. Only Risk Assessor Allowed!!!");
       });
       
       it("Should fail if product does not exist", async function () {
-        await expect(weatherInsurance.connect(riskAssessor).updateRisk(99, 75))
+        await expect(weatherInsurance.connect(riskAssessor).updateRisk(99, 7500))
           .to.be.revertedWith("Product Does not exist");
       });
       
@@ -589,7 +589,7 @@ describe("WeatherInsurance", function () {
         await expect(weatherInsurance.connect(riskAssessor).updateRisk(productId, 0))
           .to.be.revertedWith("Invalid Risk Factor");
         
-        await expect(weatherInsurance.connect(riskAssessor).updateRisk(productId, 101))
+        await expect(weatherInsurance.connect(riskAssessor).updateRisk(productId, 10100))
           .to.be.revertedWith("Invalid Risk Factor");
       });
     });
@@ -609,7 +609,7 @@ describe("WeatherInsurance", function () {
         expect(details.threshold).to.equal(100);
         expect(details.weatherType).to.equal(0);
         expect(details.aboveThreshold).to.equal(true);
-        expect(details.riskfactor).to.equal(50);
+        expect(details.riskfactor).to.equal(5000);
       });
       
       it("Should fail if product does not exist", async function () {
@@ -715,7 +715,7 @@ describe("WeatherInsurance", function () {
         );
         
         const finalBalance = await ethers.provider.getBalance(owner.address);
-        const platformFee = ethers.parseUnits("0.1")* 250n / 10000n; // 2.5% 
+        const platformFee = ethers.parseUnits("0.1") * 2500n / 1000000n; // 2.5% 
         
         expect(finalBalance).to.equal(initialBalance + platformFee);
       });
@@ -731,7 +731,7 @@ describe("WeatherInsurance", function () {
         
         const finalStake = await weatherInsurance.providerStakes(provider1.address);
         const premium = ethers.parseUnits("0.1");
-        const platformFee = premium *(250n) / 10000n; // 2.5%
+        const platformFee = premium * 2500n / 1000000n // 2.5%
         const providerAmount = premium - platformFee;
         
         expect(finalStake).to.equal(initialStake + providerAmount);
@@ -984,7 +984,7 @@ describe("WeatherInsurance", function () {
         });
         
         const finalBalance = await ethers.provider.getBalance(owner.address);
-        const platformFee = ethers.parseUnits("0.1")*(250n) / (10000n); // 2.5%
+        const platformFee = ethers.parseUnits("0.1") * 2500n / 1000000n; // 2.5%
         
         expect(finalBalance).to.equal(initialBalance + platformFee);
       });
@@ -998,7 +998,7 @@ describe("WeatherInsurance", function () {
         
         const finalStake = await weatherInsurance.providerStakes(provider1.address);
         const premium = ethers.parseUnits("0.1");
-        const platformFee = premium * (250n) / (10000n); // 2.5% of premium
+        const platformFee = premium * 2500n / 1000000n; // 2.5% of premium
         const providerAmount = premium - platformFee;
         
         expect(finalStake).to.equal(initialStake+providerAmount);
@@ -1565,17 +1565,17 @@ describe("WeatherInsurance", function () {
     describe("Update Platform Fee", function () {
       it("Should update platform fee percentage", async function () {
         await weatherInsurance.connect(owner).updatePlatformFee(
-          500, // 5%
+          50000, // 5%
           feeCollector.address
         );
         
-        expect(await weatherInsurance.platformFeePercentage()).to.equal(500n);
+        expect(await weatherInsurance.platformFeePercentage()).to.equal(50000n);
         expect(await weatherInsurance.feeCollector()).to.equal(feeCollector.address);
       });
       
       it("Should fail if not admin", async function () {
         await expect(weatherInsurance.connect(provider1).updatePlatformFee(
-          500,
+          50000,
           feeCollector.address
         ))
           .to.be.revertedWith("Not Admin");
@@ -1583,7 +1583,7 @@ describe("WeatherInsurance", function () {
       
       it("Should fail if fee is too high", async function () {
         await expect(weatherInsurance.connect(owner).updatePlatformFee(
-          1001, // 10.01%
+          100100, // 10.01%
           feeCollector.address
         ))
           .to.be.revertedWith("Fee too high");
@@ -1591,7 +1591,7 @@ describe("WeatherInsurance", function () {
       
       it("Should fail if fee collector is zero address", async function () {
         await expect(weatherInsurance.connect(owner).updatePlatformFee(
-          500,
+          50000,
           ethers.ZeroAddress
         ))
           .to.be.revertedWith("invalid Address");
@@ -1938,7 +1938,7 @@ describe("WeatherInsurance", function () {
       
       await weatherInsurance.connect(owner).grantRole(RISK_ACCESSOR_ROLE, riskAssessor.address);
 
-      await weatherInsurance.connect(riskAssessor).updateRisk(0, 30); // Lower risk = higher coverage
+      await weatherInsurance.connect(riskAssessor).updateRisk(0, 3000); // Lower risk = higher coverage
 
       await weatherInsurance.connect(policyholder1).purchasePolicy(
         0, 
